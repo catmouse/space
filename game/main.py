@@ -3159,6 +3159,8 @@ def main():
     width = 1100
     height = 1000
 
+    pygame.mixer.init()
+
     pygame.init()
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Shuttle Mission: Retrival')
@@ -3166,7 +3168,11 @@ def main():
     background = pygame.Surface(screen.get_size())
     background = background.convert()
     background.fill((0, 0, 0))
-    clock = pygame.time.Clock()    
+    clock = pygame.time.Clock()
+
+    pygame.mixer.music.load(os.path.join(getCurrentFolder(),"sounds","Track01.mp3"))
+
+    pygame.mixer.music.play(-1)
     
     
     # draw background
