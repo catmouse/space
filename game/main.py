@@ -8,6 +8,11 @@ from pygame.locals import *
 import random
 import time
 
+
+def playEffect(effects_dict,effect_name): #='click'):
+    selection = random.choice(effects_dict[effect_name])
+    selection.play()
+    
 def getCurrentFolder():
     return os.path.dirname(sys.argv[0])
 
@@ -171,7 +176,8 @@ class Menu:
                     pygame.event.post(menuEvent)
                 curItem = curItem + 1
 class Game15:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -260,6 +266,7 @@ class Game15:
             self.screen.blit(label,(50,currentY+35))
         else:
             line = 'Failed Mission'
+            playEffect(self.effects_dict,'crash')
             mybigfont = pygame.font.SysFont('MS Comic Sans',100)
             label = mybigfont.render(line,1,(255,0,0))
             self.screen.blit(label,(250,500))
@@ -279,6 +286,7 @@ class Game15:
                             self.moveToNextQuestion()
                         else:
                             if self.attempts < self.maxAttempts:
+                                playEffect(self.effects_dict,'error')
                                 self.attempts+=1
 
     def moveToNextQuestion(self):        
@@ -288,12 +296,14 @@ class Game15:
             self.answer_boxes = {}
         elif self.attempts < self.maxAttempts:
             self.success = True
+            playEffect(self.effects_dict,'success')
             mybigfont = pygame.font.SysFont('MS Comic Sans',100)
             label = mybigfont.render('SUCCESS',1,(5,255,255))
             self.screen.blit(label,(250,500))
     
 class Game14:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -389,6 +399,7 @@ class Game14:
                 
         else:
             line = 'Failed mission'
+            playEffect(self.effects_dict,'crash')
             mybigfont = pygame.font.SysFont('MS Comic Sans',100)
             label = mybigfont.render(line,1,(255,0,0))
             self.screen.blit(label,(250,500))            
@@ -417,6 +428,7 @@ class Game14:
                 delta = time.time() - self.startTime
                 if delta < 30:
                     self.success = True
+                    playEffect(self.effects_dict,'success')
                     mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                     label = mybigfont.render('SUCCESS',1,(5,255,255))
                     self.screen.blit(label,(250,500))                    
@@ -424,7 +436,8 @@ class Game14:
 
                 
 class Game13:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()        
         
@@ -543,6 +556,7 @@ class Game13:
                 self.state = 'done'                
                 self.success = True
                 self.deactivate()
+                playEffect(self.effects_dict,'success')
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('SUCCESS',1,(5,255,255))
                 self.mLayer.blit(label,(250,500))
@@ -569,6 +583,7 @@ class Game13:
                 self.startTime == None
                 self.state = 'd'
                 self.deactivate()
+                playEffect(self.effects_dict,'crash')
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('FAILED',1,(255,0,0))
                 self.mLayer.blit(label,(250,500))                
@@ -624,7 +639,8 @@ class Game13:
     
     
 class Game12:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -723,13 +739,15 @@ class Game12:
                 self.deactivate()
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('SUCCESS',1,(5,255,255))
-                self.screen.blit(label,(250,500))                
+                self.screen.blit(label,(250,500))
+                playEffect(self.effects_dict,'success')
 
             attemptLine = 'Attempts : ' + str(self.attempts)
             label = self.myfont.render(attemptLine,1,(250,100,155))
             self.screen.blit(label,(50,35))
         else:
-            line = 'Failed mission'            
+            line = 'Failed mission'
+            playEffect(self.effects_dict,'crash')
             mybigfont = pygame.font.SysFont('MS Comic Sans',100)
             label = mybigfont.render(line,1,(255,0,0))
             self.screen.blit(label,(250,500))
@@ -756,11 +774,13 @@ class Game12:
                                 self.selectedValve = None
                         else:
                             self.attempts+=1
+                            playEffect(self.effects_dict,'error')
                                 
                 
                 
 class Game11:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -838,12 +858,13 @@ class Game11:
                 self.success = True
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('SUCCESS',1,(5,255,255))
-                self.mLayer.blit(label,(250,500))                
-            else:
-                line = 'Failed'
-                mybigfont = pygame.font.SysFont('MS Comic Sans',100)
-                label = mybigfont.render(line,1,(255,0,0))
                 self.mLayer.blit(label,(250,500))
+                playEffect(self.effects_dict,'success')
+            else:                
+                mybigfont = pygame.font.SysFont('MS Comic Sans',100)
+                label = mybigfont.render('Failed',1,(255,0,0))
+                self.mLayer.blit(label,(250,500))
+                playEffect(self.effects_dict,'crash')
             self.deactivate()
         if self.currentCell != 0:
             x = (self.currentCell % 10)*100
@@ -882,6 +903,7 @@ class Game11:
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render(line,1,(255,0,0))
                 self.mLayer.blit(label,(250,500))
+                playEffect(self.effects_dict,'crash')
 
     def moveUp(self):
         if self.currentCell > 9:            
@@ -913,8 +935,9 @@ class Game11:
                     self.moveRight()
 
         
-class Game10:
-    def __init__(self):
+class Game10:    
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict        
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -1010,6 +1033,7 @@ class Game10:
             label = mybigfont.render(line,1,(255,0,0))
             self.screen.blit(label,(250,500))
             self.deactivate()
+            playEffect(self.effects_dict,'crash')
             
 
     def handleEvent(self,event):
@@ -1025,6 +1049,7 @@ class Game10:
                         else:
                             if self.attempts < self.maxAttempts:
                                 self.attempts+=1
+                                playEffect(self.effects_dict,'error')
 
     def moveToNextQuestion(self):        
         if self.qPos < len(self.question_list) :
@@ -1037,10 +1062,12 @@ class Game10:
             mybigfont = pygame.font.SysFont('MS Comic Sans',100)
             label = mybigfont.render('SUCCESS',1,(5,255,255))
             self.screen.blit(label,(250,500))
+            playEffect(self.effects_dict,'success')
                                      
                                      
 class Game9:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()        
         
@@ -1153,6 +1180,8 @@ class Game9:
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('SUCCESS',1,(5,255,255))
                 self.mLayer.blit(label,(250,500))
+                playEffect(self.effects_dict,'success')
+                
                 
             if self.currentCell != 0:
                 x = (self.currentCell % 10)*100
@@ -1179,6 +1208,7 @@ class Game9:
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('Failed Mission',1,(255,0,0))
                 self.mLayer.blit(label,(250,500))
+                playEffect(self.effects_dict,'crash')
 
     def moveUp(self):
         if self.currentCell > 9:
@@ -1226,7 +1256,8 @@ class Game9:
                 elif event.key == pygame.K_RIGHT:
                     self.moveRight()    
 class Game8:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()        
         
@@ -1338,6 +1369,7 @@ class Game8:
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('SUCCESS',1,(5,255,255))
                 self.mLayer.blit(label,(250,500))
+                playEffect(self.effects_dict,'success')
                 
             if self.currentCell != 0:
                 x = (self.currentCell % 10)*100
@@ -1364,6 +1396,7 @@ class Game8:
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('Failed Mission',1,(255,0,0))
                 self.mLayer.blit(label,(250,500))
+                playEffect(self.effects_dict,'crash')
 
     def moveUp(self):
         if self.currentCell > 9:
@@ -1415,7 +1448,8 @@ class Game8:
                 
         
 class Game7:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -1501,6 +1535,7 @@ class Game7:
             label = mybigfont.render(line,1,(255,0,0))
             self.screen.blit(label,(250,500))            
             self.deactivate()
+            playEffect(self.effects_dict,'crash')
             
 
     def handleEvent(self,event):
@@ -1516,6 +1551,7 @@ class Game7:
                     else:
                         if self.attempts < self.maxAttempts:
                             self.attempts+=1
+                            playEffect(self.effects_dict,'error')
                 currentY+=35
             if self.attempts < self.maxAttempts:
                 success = True
@@ -1528,9 +1564,11 @@ class Game7:
                     mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                     label = mybigfont.render('SUCCESS',1,(5,255,255))
                     self.screen.blit(label,(250,500))
+                    playEffect(self.effects_dict,'success')
         
 class Game6:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -1729,12 +1767,14 @@ class Game6:
                 self.state = 's'
                 self.success = True
                 self.deactivate()
+                playEffect(self.effects_dict,'success')
             else:
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('FAILED',1,(255,0,0))
                 self.mLayer.blit(label,(250,500))
                 self.state = 'f'
                 self.deactivate()
+                playEffect(self.effects_dict,'crash')
 
     
         self.screen.blit(self.background,(0,0))
@@ -1786,7 +1826,8 @@ class Game6:
             
         
 class Game5:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -1883,6 +1924,7 @@ class Game5:
             label = mybigfont.render(line,1,(255,0,0))
             self.screen.blit(label,(250,500))            
             self.deactivate()
+            playEffect(self.effects_dict,'crash')
             
 
     def handleEvent(self,event):
@@ -1898,6 +1940,7 @@ class Game5:
                         else:
                             if self.attempts < self.maxAttempts:
                                 self.attempts+=1
+                                playEffect(self.effects_dict,'error')
 
     def moveToNextQuestion(self):        
         if self.qPos < len(self.question_list) :
@@ -1910,10 +1953,12 @@ class Game5:
             mybigfont = pygame.font.SysFont('MS Comic Sans',100)
             label = mybigfont.render('SUCCESS',1,(5,255,255))
             self.screen.blit(label,(250,500))
+            playEffect(self.effects_dict,'success')
         
         
 class Game4:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -2013,17 +2058,19 @@ class Game4:
                     mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                     label = mybigfont.render('SUCCESS',1,(5,255,255))
                     self.screen.blit(label,(250,500))
-                    
+                    playEffect(self.effects_dict,'success')
                 else:
                     line= 'Failed Mission'
                     self.deactivate()
                     mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                     label = mybigfont.render(line,1,(255,0,0))
                     self.screen.blit(label,(250,500))
+                    playEffect(self.effects_dict,'crash')
                     
             
 class Game3:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -2050,35 +2097,35 @@ class Game3:
         self.fuel_part_a[0] = random.randint(1,(self.fuel_parts[0]/100)-1)
         self.fuel_part_a[0]*=100
 
-        print self.fuel_part_a
+        #print self.fuel_part_a
         
         self.fuel_part_a[1] = random.randint(1,((self.fuel_parts[0]-self.fuel_part_a[0])/50)-2)
         self.fuel_part_a[1]*=50
 
-        print self.fuel_part_a
+        #print self.fuel_part_a
         
         self.fuel_part_a[2] = self.fuel_parts[0]-self.fuel_part_a[0]-self.fuel_part_a[1]
 
-        print self.fuel_part_a
+        #print self.fuel_part_a
 
         self.fuel_part_b[0] = random.randint(1,(self.fuel_parts[1]/100)-2)
         self.fuel_part_b[0]*=100
 
-        print self.fuel_part_b
+        #print self.fuel_part_b
 
         self.fuel_part_b[1] = random.randint(1,((self.fuel_parts[1]-self.fuel_part_b[0])/100)-2)
         self.fuel_part_b[1]*=100
 
-        print self.fuel_part_b
+        #print self.fuel_part_b
 
         self.fuel_part_b[2] = random.randint(1,((self.fuel_parts[1]-self.fuel_part_b[0]-self.fuel_part_b[1])/50)-2)
         self.fuel_part_b[2]*=50
 
-        print self.fuel_part_b
+        #print self.fuel_part_b
 
         self.fuel_part_b[3]=self.fuel_parts[1]-self.fuel_part_b[0]-self.fuel_part_b[1]-self.fuel_part_b[2]
 
-        print self.fuel_part_b
+        #print self.fuel_part_b
         
         self.buttons[0:3] = self.fuel_part_a
         for i in range(3):
@@ -2186,15 +2233,17 @@ class Game3:
                     mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                     label = mybigfont.render('SUCCESS',1,(5,255,255))
                     self.screen.blit(label,(250,500))
-                else:
-                    line= 'Failed'
+                    playEffect(self.effects_dict,'success')
+                else:                    
                     self.deactivate()
                     mybigfont = pygame.font.SysFont('MS Comic Sans',100)
-                    label = mybigfont.render(line,1,(255,0,0))
+                    label = mybigfont.render('Failed',1,(255,0,0))
                     self.screen.blit(label,(250,500))
+                    playEffect(self.effects_dict,'crash')
         
 class Game2:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -2330,6 +2379,7 @@ class Game2:
             mybigfont = pygame.font.SysFont('MS Comic Sans',100)
             label = mybigfont.render(self.status,1,(255,0,0))
             self.screen.blit(label,(250,500))
+            playEffect(self.effects_dict,'crash')
         else:
             self.status = 'Status : Success'
             self.success = True
@@ -2338,7 +2388,7 @@ class Game2:
             mybigfont = pygame.font.SysFont('MS Comic Sans',100)
             label = mybigfont.render(self.status,1,(5,255,255))
             self.mLayer.blit(label,(250,500))
-
+            playEffect(self.effects_dict,'success')
             
 
     def handleEvent(self,event):
@@ -2362,11 +2412,12 @@ class Game2:
                     mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                     label = mybigfont.render(self.status,1,(255,0,0))
                     self.screen.blit(label,(250,500))
-                    
+                    playEffect(self.effects_dict,'crash')
                 
         
 class Game1:
-    def __init__(self):
+    def __init__(self,effects_dict):
+        self.effects_dict = effects_dict
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
 
@@ -2555,12 +2606,14 @@ class Game1:
                 self.state = 's'
                 self.deactivate()                
                 self.success = True
+                playEffect(self.effects_dict,'success')
             else:
                 mybigfont = pygame.font.SysFont('MS Comic Sans',100)
                 label = mybigfont.render('FAILED',1,(255,0,0))
                 self.mLayer.blit(label,(250,500))
                 self.state = 'f'                
                 self.deactivate()
+                playEffect(self.effects_dict,'crash')
 
     def draw(self):
         self.screen.blit(self.background,(0,0))
@@ -3152,7 +3205,32 @@ so close to home ...
             textPos = self.nextTxt.get_pos()
             if eventX > textPos.left and eventX < textPos.right and eventY > textPos.top and eventY < textPos.bottom:
                 menuEvent = pygame.event.Event(self.MENUCLICKEDEVENT, item=0, text=self.nextTxt.get_text())
-                pygame.event.post(menuEvent)            
+                pygame.event.post(menuEvent)
+
+def retryMenuFunc(clock,screen,background,effects_dict):
+    retryMenuOptions = ['Retry','Quit']
+    retryMenu = Menu(retryMenuOptions)
+    retryMenu.drawMenu()    
+    while retryMenu.isActive():
+        clock.tick(60)
+        for event in pygame.event.get():
+            retryMenu.handleEvent(event)
+            if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+                return
+            elif event.type == Menu.MENUCLICKEDEVENT:
+                if event.text.find('Retry') > -1:
+                    playEffect(effects_dict,'click')
+                    retryMenu.deactivate()
+                elif event.text.find('Quit') > -1:
+                    playEffect(effects_dict,'click')
+                    return True
+        screen.blit(background,(0,0))
+        if retryMenu.isActive():
+            retryMenu.drawMenu()
+        else:
+            background.fill((10,10,10))
+        pygame.display.flip()
+    return False
         
 def main():
     # pygame initialization
@@ -3171,9 +3249,26 @@ def main():
     clock = pygame.time.Clock()
 
     pygame.mixer.music.load(os.path.join(getCurrentFolder(),"sounds","Track01.mp3"))
-
     pygame.mixer.music.play(-1)
-    
+
+    effects_folder = os.path.join(getCurrentFolder(),"sounds")
+    effect_strings = ['error','success','crash','click']
+    effects_dict = {}
+    for fileName in os.listdir(effects_folder):
+        found = None
+        for effect_string in effect_strings:
+            if fileName.lower().startswith(effect_string):
+                found = effect_string
+        if found != None:
+            fullPath = os.path.join(effects_folder,fileName)
+            try:
+                pygameMix = pygame.mixer.Sound(fullPath)
+                if effects_dict.has_key(found):
+                    effects_dict[found].append(pygameMix)
+                else:
+                    effects_dict[found] = [pygameMix]
+            except:
+                print 'problem loading ', fullPath, ' .skipping'
     
     # draw background
     screen.blit(background, (0, 0))
@@ -3199,14 +3294,19 @@ def main():
                 myMenu.handleEvent(event)
                 # quit the game if escape is pressed
                 if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Quit") > -1:
+                        playEffect(effects_dict,'click')                                   
+                        pygame.mixer.music.stop()
                         return
-                    elif event.text.find("Start New Game") > -1:                    
+                    elif event.text.find("Start New Game") > -1:
+                        playEffect(effects_dict,'click')
                         myMenu.deactivate()
                         levelStart = 1
                     elif event.text.find("Select Stage") > -1:
+                        playEffect(effects_dict,'click')
                         myMenu.deactivate()
             screen.blit(background, (0, 0))    
             if myMenu.isActive():
@@ -3228,11 +3328,13 @@ def main():
                 for event in pygame.event.get():
                     levelMenu.handleEvent(event)
                     if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+                        pygame.mixer.music.stop()
                         return
                     elif event.type == Menu.MENUCLICKEDEVENT:                    
                         for i in levelsMenu:
                             if event.text.find(i) > -1:                            
                                 destination = i
+                                playEffect(effects_dict,'click')
                                 levelMenu.deactivate()
                 screen.blit(background,(0,0))
                 if levelMenu.isActive():
@@ -3253,9 +3355,11 @@ def main():
             for event in pygame.event.get():
                 part1.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return              
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part1.deactivate() 
             screen.blit(background,(0,0))
             if part1.isActive():
@@ -3271,9 +3375,11 @@ def main():
             for event in pygame.event.get():
                 introGame1.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame1.deactivate()
             screen.blit(background,(0,0))
             if introGame1.isActive():
@@ -3282,10 +3388,10 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
 
-        game1 = Game1()
+        game1 = Game1(effects_dict)
         game1.drawPart()
         gameRunning = 1
-        while gameRunning < 100 : 
+        while gameRunning < 90 : 
             clock.tick(60)
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
@@ -3305,26 +3411,10 @@ def main():
         if game1.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
+
 
     while levelStart == 2:
         part2 = PartStory('2')
@@ -3335,9 +3425,11 @@ def main():
             for event in pygame.event.get():
                 part2.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part2.deactivate() 
             screen.blit(background,(0,0))
             if part2.isActive():
@@ -3353,9 +3445,11 @@ def main():
             for event in pygame.event.get():
                 introGame2.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGameTwo.deactivate()
             screen.blit(introGame2,(0,0))
             if introGame2.isActive():
@@ -3364,14 +3458,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
 
-        game2 = Game2()
+        game2 = Game2(effects_dict)
         game2.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game2.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return              
             game2.draw()
             pygame.display.flip()
@@ -3380,26 +3475,9 @@ def main():
         if game2.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()            
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return            
             
     while levelStart == 3:
         introGame3 = IntroGame('3')
@@ -3409,9 +3487,11 @@ def main():
             for event in pygame.event.get():
                 introGame3.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame3.deactivate()
             screen.blit(background,(0,0))
             if introGame3.isActive():
@@ -3420,14 +3500,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
         
-        game3 = Game3()
+        game3 = Game3(effects_dict)
         game3.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game3.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
             game3.draw()
             pygame.display.flip()
@@ -3436,26 +3517,9 @@ def main():
         if game3.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:                            
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return   
 
     while levelStart == 4:
         part4 = PartStory('4')
@@ -3466,9 +3530,11 @@ def main():
             for event in pygame.event.get():
                 part4.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part4.deactivate() 
             screen.blit(background,(0,0))
             if part4.isActive():
@@ -3484,24 +3550,28 @@ def main():
             for event in pygame.event.get():
                 introGame4.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame4.deactivate()
             screen.blit(background,(0,0))
             if introGame4.isActive():
                 introGame4.drawPart()
             else:
                 background.fill((10,10,10))
-            pygame.display.flip()    
-        game4 = Game4()
+            pygame.display.flip()
+            
+        game4 = Game4(effects_dict)
         game4.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game4.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
             game4.draw()
             pygame.display.flip()
@@ -3510,27 +3580,12 @@ def main():
         if game4.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:                            
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
-                
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
+    pygame.mixer.music.stop()
+    pygame.mixer.music.load(os.path.join(getCurrentFolder(),"sounds","Track02.mp3"))
+    pygame.mixer.music.play(-1)                
     while levelStart == 5:
         part5 = PartStory('5')
         part5.drawPart()
@@ -3540,9 +3595,11 @@ def main():
             for event in pygame.event.get():
                 part5.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part5.deactivate() 
             screen.blit(background,(0,0))
             if part5.isActive():
@@ -3558,9 +3615,11 @@ def main():
             for event in pygame.event.get():
                 introGame5.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame5.deactivate()
             screen.blit(background,(0,0))
             if introGame5.isActive():
@@ -3569,14 +3628,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
             
-        game5 = Game5()
+        game5 = Game5(effects_dict)
         game5.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game5.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
             game5.draw()
             pygame.display.flip()    
@@ -3585,26 +3645,9 @@ def main():
         if game5.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:                            
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
 
     while levelStart == 6:
         part6 = PartStory('6')
@@ -3615,9 +3658,11 @@ def main():
             for event in pygame.event.get():
                 part6.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part6.deactivate() 
             screen.blit(background,(0,0))
             if part6.isActive():
@@ -3633,9 +3678,11 @@ def main():
             for event in pygame.event.get():
                 introGame6.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame6.deactivate()
             screen.blit(background,(0,0))
             if introGame6.isActive():
@@ -3644,14 +3691,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
             
-        game6 = Game6()
+        game6 = Game6(effects_dict)
         game6.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game6.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return        
             game6.draw()
             pygame.display.flip()
@@ -3660,26 +3708,9 @@ def main():
         if game6.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:                            
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
 
     while levelStart == 7:
         part7 = PartStory('7')
@@ -3689,10 +3720,12 @@ def main():
             clock.tick(60)
             for event in pygame.event.get():
                 part7.handleEvent(event)            
-                if event.type == QUIT:
+                if event.type == QUIT:                    
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part7.deactivate() 
             screen.blit(background,(0,0))
             if part7.isActive():
@@ -3708,9 +3741,11 @@ def main():
             for event in pygame.event.get():
                 introGame7.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame7.deactivate()
             screen.blit(background,(0,0))
             if introGame7.isActive():
@@ -3719,14 +3754,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
 
-        game7 = Game7()
+        game7 = Game7(effects_dict)
         game7.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game7.handleEvent(event)
-                if event.type == QUIT:
+                if event.type == QUIT:                    
+                    pygame.mixer.music.stop()
                     return        
             game7.draw()
             pygame.display.flip()
@@ -3735,26 +3771,9 @@ def main():
         if game7.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
                 
     while levelStart == 8:
         part8 = PartStory('8')
@@ -3765,9 +3784,11 @@ def main():
             for event in pygame.event.get():
                 part8.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part8.deactivate() 
             screen.blit(background,(0,0))
             if part8.isActive():
@@ -3778,14 +3799,16 @@ def main():
 
         introGame8 = IntroGame('8')
         introGame8.drawPart()
-        while introGameEight.isActive():
+        while introGame8.isActive():
             clock.tick(60)
             for event in pygame.event.get():
                 introGame8.handleEvent(event)
-                if event.type == QUIT:
+                if event.type == QUIT:                    
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame8.deactivate()
             screen.blit(background,(0,0))
             if introGame8.isActive():
@@ -3795,14 +3818,15 @@ def main():
             pygame.display.flip()        
         
 
-        game8 = Game8()
+        game8 = Game8(effects_dict)
         game8.drawPart()
         gameRunning  = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game8.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
             game8.update()
             game8.draw()
@@ -3812,26 +3836,9 @@ def main():
         if game8.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
                 
     while levelStart == 9:
         part9 = PartStory('9')
@@ -3842,9 +3849,11 @@ def main():
             for event in pygame.event.get():
                 part9.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part9.deactivate() 
             screen.blit(background,(0,0))
             if part9.isActive():
@@ -3860,9 +3869,11 @@ def main():
             for event in pygame.event.get():
                 introGame9.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame9.deactivate()
             screen.blit(background,(0,0))
             if introGame9.isActive():
@@ -3871,14 +3882,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
 
-        game9 = Game9()
+        game9 = Game9(effects_dict)
         game9.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game9.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
             game9.update()
             game9.draw()
@@ -3888,26 +3900,9 @@ def main():
         if game9.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
                 
     while levelStart == 10:
         part10 = PartStory('10')
@@ -3918,9 +3913,11 @@ def main():
             for event in pygame.event.get():
                 part10.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part10.deactivate() 
             screen.blit(background,(0,0))
             if part10.isActive():
@@ -3936,9 +3933,11 @@ def main():
             for event in pygame.event.get():
                 introGame10.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame10.deactivate()
             screen.blit(background,(0,0))
             if introGame10.isActive():
@@ -3947,14 +3946,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()    
 
-        game10 = Game10()
+        game10 = Game10(effects_dict)
         game10.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game10.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return        
             game10.draw()
             pygame.display.flip()
@@ -3963,26 +3963,9 @@ def main():
         if game10.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
                 
     while levelStart == 11:
         part11 = PartStory('11')
@@ -3993,9 +3976,11 @@ def main():
             for event in pygame.event.get():
                 part11.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part11.deactivate() 
             screen.blit(background,(0,0))
             if part11.isActive():
@@ -4011,9 +3996,11 @@ def main():
             for event in pygame.event.get():
                 introGame11.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame11.deactivate()
             screen.blit(background,(0,0))
             if introGame11.isActive():
@@ -4022,14 +4009,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
 
-        game11 = Game11()
+        game11 = Game11(effects_dict)
         game11.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game11.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
             game11.update()
             game11.draw()
@@ -4039,26 +4027,9 @@ def main():
         if game11.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
 
     while levelStart == 12:
         part12 = PartStory('12')
@@ -4069,9 +4040,11 @@ def main():
             for event in pygame.event.get():
                 part12.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part12.deactivate() 
             screen.blit(background,(0,0))
             if part12.isActive():
@@ -4087,9 +4060,11 @@ def main():
             for event in pygame.event.get():
                 introGame12.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame12.deactivate()
             screen.blit(background,(0,0))
             if introGame12.isActive():
@@ -4098,14 +4073,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
 
-        game12 = Game12()
+        game12 = Game12(effects_dict)
         game12.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game12.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return        
             game12.draw()
             pygame.display.flip()
@@ -4114,26 +4090,9 @@ def main():
         if game12.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
 
     while levelStart == 13:
         introGame13 = IntroGame('13')
@@ -4143,9 +4102,11 @@ def main():
             for event in pygame.event.get():
                 introGame13.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame13.deactivate()
             screen.blit(background,(0,0))
             if introGame13.isActive():
@@ -4154,14 +4115,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
 
-        game13 = Game13()
+        game13 = Game13(effects_dict)
         game13.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game13.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
             game13.update()
             game13.draw()
@@ -4171,26 +4133,9 @@ def main():
         if game13.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
 
     while levelStart == 14:
         part14 = PartStory('14')
@@ -4201,9 +4146,11 @@ def main():
             for event in pygame.event.get():
                 part14.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part14.deactivate() 
             screen.blit(background,(0,0))
             if part14.isActive():
@@ -4219,9 +4166,11 @@ def main():
             for event in pygame.event.get():
                 introGame14.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')                        
                         introGame14.deactivate()
             screen.blit(background,(0,0))
             if introGame14.isActive():
@@ -4230,14 +4179,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
 
-        game14 = Game14()
+        game14 = Game14(effects_dict)
         game14.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game14.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return        
             game14.draw()
             pygame.display.flip()
@@ -4246,26 +4196,9 @@ def main():
         if game14.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
 
     while levelStart == 15:        
         part15 = PartStory('15')
@@ -4276,9 +4209,11 @@ def main():
             for event in pygame.event.get():
                 part15.handleEvent(event)            
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return                
                 elif event.type == Menu.MENUCLICKEDEVENT:
-                    if event.text.find("NEXT") > -1:                    
+                    if event.text.find("NEXT") > -1:
+                        playEffect(effects_dict,'click')
                         part15.deactivate() 
             screen.blit(background,(0,0))
             if part15.isActive():
@@ -4294,9 +4229,11 @@ def main():
             for event in pygame.event.get():
                 introGame15.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Start") > -1:
+                        playEffect(effects_dict,'click')
                         introGame15.deactivate()
             screen.blit(background,(0,0))
             if introGame15.isActive():
@@ -4305,14 +4242,15 @@ def main():
                 background.fill((10,10,10))
             pygame.display.flip()
 
-        game15 = Game15()
+        game15 = Game15(effects_dict)
         game15.drawPart()
         gameRunning = 1
-        while gameRunning < 100:
+        while gameRunning < 90:
             clock.tick(60)
             for event in pygame.event.get():
                 game15.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return        
             game15.draw()
             pygame.display.flip()
@@ -4321,27 +4259,13 @@ def main():
         if game15.isSuccess():
             levelStart+=1
         else:
-            retryMenuOptions = ['Retry','Quit']
-            retryMenu = Menu(retryMenuOptions)
-            retryMenu.drawMenu()
-            while retryMenu.isActive():
-                clock.tick(60)
-                for event in pygame.event.get():
-                    retryMenu.handleEvent(event)
-                    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                        return
-                    elif event.type == Menu.MENUCLICKEDEVENT:
-                        if event.text.find('Retry') > -1:
-                            retryMenu.deactivate()
-                        elif event.text.find('Quit') > -1:
-                            return
-                screen.blit(background,(0,0))
-                if retryMenu.isActive():
-                    retryMenu.drawMenu()
-                else:
-                    background.fill((10,10,10))
-                pygame.display.flip()
-
+            if retryMenuFunc(clock,screen,background,effects_dict):
+                pygame.mixer.music.stop()
+                return
+            
+    pygame.mixer.music.stop()
+    pygame.mixer.music.load(os.path.join(getCurrentFolder(),"sounds","ending_01.mp3"))
+    pygame.mixer.music.play(-1)
     if levelStart == 16:
         ending = IntroGame('16')
         ending.drawPart()
@@ -4350,9 +4274,11 @@ def main():
             for event in pygame.event.get():
                 ending.handleEvent(event)
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()
                     return
                 elif event.type == Menu.MENUCLICKEDEVENT:
                     if event.text.find("Finish") > -1:
+                        playEffect(effects_dict,'click')
                         ending.deactivate()
             screen.blit(background,(0,0))
             if ending.isActive():
@@ -4360,7 +4286,7 @@ def main():
             else:
                 background.fill((10,10,10))
             pygame.display.flip()        
-        
+    pygame.mixer.music.stop()
         
 if __name__ == '__main__':    
     main()
